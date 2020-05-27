@@ -22,7 +22,6 @@ from model.parser import Parser
 from model.reconstruction_model import Reconstructor
 from model.utils import GloveHelper
 
-assert astor.__version__ == "0.7.1"
 if six.PY3:
     # import additional packages for wikisql dataset (works only under Python 3)
     pass
