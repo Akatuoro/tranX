@@ -50,7 +50,7 @@ class WikiSqlBatch(Batch):
         mask_val = 1 if attention_mask else 0
         table_header_mask = [[1 - mask_val] * len(table.header) + [mask_val] * (max_colum_num - len(table.header)) for table in tables]
 
-        return T.ByteTensor(table_header_mask)
+        return T.BoolTensor(table_header_mask)
 
     @staticmethod
     def get_table_header_input_tensor(tables, vocab, pad_col_lens=True, cuda=False):
