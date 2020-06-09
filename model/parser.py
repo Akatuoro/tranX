@@ -138,10 +138,10 @@ class Parser(nn.Module):
             # compute action probabilities by dot-producting the resulting vector and (GenToken, ApplyConstructor) action embeddings
             # i.e., p(action) = query_vec^T \cdot W \cdot embedding
 
-            self.query_vec_to_action_embed = nn.Linear(args.att_vec_size, args.embed_size, bias=args.readout == 'non_linear')
+            self.query_vec_to_action_embed = nn.Linear(args.att_vec_size, args.action_embed_size, bias=args.readout == 'non_linear')
             if args.query_vec_to_action_diff_map:
                 # use different linear transformations for GenToken and ApplyConstructor actions
-                self.query_vec_to_primitive_embed = nn.Linear(args.att_vec_size, args.embed_size, bias=args.readout == 'non_linear')
+                self.query_vec_to_primitive_embed = nn.Linear(args.att_vec_size, args.action_embed_size, bias=args.readout == 'non_linear')
             else:
                 self.query_vec_to_primitive_embed = self.query_vec_to_action_embed
 
