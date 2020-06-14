@@ -13,7 +13,7 @@ import evaluation
 from asdl.asdl import ASDLGrammar
 from asdl.transition_system import TransitionSystem
 from common.utils import update_args, init_arg_parser
-from components.dataset import Dataset
+from components.dataset import Dataset, DiskDataset
 from components.reranker import *
 from components.standalone_parser import StandaloneParser
 from model import nn_utils
@@ -43,7 +43,10 @@ def train(args):
     """Maximum Likelihood Estimation"""
 
     # load in train/dev set
-    train_set = Dataset.from_bin_file(args.train_file)
+    if args.train_from_disk:
+        train_set = DiskDataset.from_bin_file(args.train_file)
+    else:
+        train_set = Dataset.from_bin_file(args.train_file)
 
     if args.dev_file:
         dev_set = Dataset.from_bin_file(args.dev_file)

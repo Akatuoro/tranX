@@ -90,6 +90,8 @@ def init_arg_parser():
     arg_parser.add_argument('--dev_file', type=str, help='path to the dev source file')
     arg_parser.add_argument('--pretrain', type=str, help='path to the pretrained model file')
 
+    arg_parser.add_argument('--train_from_disk', action='store_true', default=False, help='load sequential training data from disk when needed (less RAM usage)')
+
     arg_parser.add_argument('--batch_size', default=10, type=int, help='Batch size')
     arg_parser.add_argument('--dropout', default=0., type=float, help='Dropout rate')
     arg_parser.add_argument('--word_dropout', default=0., type=float, help='Word dropout rate')

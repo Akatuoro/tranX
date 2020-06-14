@@ -53,6 +53,68 @@ class Dataset(object):
         return iter(self.examples)
 
 
+class DiskDataset(Dataset):
+    """
+    Same as Dataset, but it does not load the dataset into memory.
+    Data has to be loadable from the file via consecutive pickle.load() calls.
+    """
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self._seekables = None
+
+    @property
+    def examples(self):
+        """Generator for examples. Reads whole file."""
+        f = open(self.file_path, 'rb')
+        while 1:
+            try:
+                example = pickle.load(f)
+            except EOFError:
+                break
+            yield example
+        f.close()
+
+    @staticmethod
+    def from_bin_file(file_path):
+        return DiskDataset(file_path)
+
+    def batch_iter(self, batch_size, shuffle=False):
+        index_arr = np.arange(len(self.seekables))
+        if shuffle:
+            np.random.shuffle(index_arr)
+
+        f = open(self.file_path, 'rb')
+
+        batch_num = int(np.ceil(len(self.seekables) / float(batch_size)))
+        for batch_id in range(batch_num):
+            batch_ids = index_arr[batch_size * batch_id: batch_size * (batch_id + 1)]
+            batch_examples = []
+            for i in batch_ids:
+                f.seek(self.seekables[i])
+                batch_examples.append(pickle.load(f))
+            batch_examples.sort(key=lambda e: -len(e.src_sent))
+
+            yield batch_examples
+
+    @property
+    def seekables(self):
+        """List of seekable positions of examples in the file, cached."""
+        f = open(self.file_path, 'rb')
+        if self._seekables is None:
+            self._seekables = []
+            while 1:
+                try:
+                    pos = f.tell()
+                    example = pickle.load(f)
+                    self._seekables.append(pos)
+                except EOFError:
+                    break
+        return self._seekables
+
+    def __len__(self):
+        return len(self.seekables)
+
+
 class Example(object):
     def __init__(self, src_sent, tgt_actions, tgt_code, tgt_ast, idx=0, meta=None):
         self.src_sent = src_sent
