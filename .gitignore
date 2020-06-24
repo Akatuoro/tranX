@@ -101,6 +101,9 @@ ENV/
 # PyCharm files
 .idea/
 
+# VSCode files
+.vscode/
+
 # VIM stuff
 *.swp
 
