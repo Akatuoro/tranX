@@ -43,7 +43,7 @@ def train(args):
     """Maximum Likelihood Estimation"""
 
     # load in train/dev set
-    if args.train_from_disk:
+    if args.train_from_disk or args.train_file.endswith('.seq.bin'):
         train_set = DiskDataset.from_bin_file(args.train_file)
     else:
         train_set = Dataset.from_bin_file(args.train_file)
