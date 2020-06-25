@@ -91,6 +91,7 @@ def init_arg_parser():
     arg_parser.add_argument('--pretrain', type=str, help='path to the pretrained model file')
 
     arg_parser.add_argument('--train_from_disk', action='store_true', default=False, help='load sequential training data from disk when needed (less RAM usage)')
+    arg_parser.add_argument('--log_file', type=str, default=None, help='path to log file for eval results')
 
     arg_parser.add_argument('--batch_size', default=10, type=int, help='Batch size')
     arg_parser.add_argument('--dropout', default=0., type=float, help='Dropout rate')

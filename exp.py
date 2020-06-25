@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import time
 
+import json
 import astor
 import six.moves.cPickle as pickle
 from six.moves import input
@@ -85,6 +86,10 @@ def train(args):
             glove_embedding = GloveHelper(args.glove_embed_path)
             glove_embedding.load_to(model.src_embed, vocab.source)
 
+    if args.log_file and args.dev_file:
+        log_file = open(args.log_file, 'w')
+        log_file.write('epoch,epoch_time,eval_time,eval_results,dev_score\n')
+
     print('begin training, %d training examples, %d dev examples' % (len(train_set), len(dev_set)), file=sys.stderr)
     print('vocab: %s' % repr(vocab), file=sys.stderr)
 
@@ -153,6 +158,10 @@ def train(args):
                                                    verbose=False, eval_top_pred_only=args.eval_top_pred_only)
                 dev_score = eval_results[evaluator.default_metric]
 
+                if args.log_file:
+                    log_file.write(json.dumps([epoch, time.time() - epoch_begin, time.time() - eval_start,
+                                               eval_results, dev_score]) + '\n')
+                    log_file.flush()
                 print('[Epoch %d] evaluate details: %s, dev %s: %.5f (took %ds)' % (
                                     epoch, eval_results,
                                     evaluator.default_metric,
