@@ -186,14 +186,14 @@ def train(args):
 
         if epoch == args.max_epoch:
             print('reached max epoch, stop!', file=sys.stderr)
-            exit(0)
+            return
 
         if patience >= args.patience and epoch >= args.lr_decay_after_epoch:
             num_trial += 1
             print('hit #%d trial' % num_trial, file=sys.stderr)
             if num_trial == args.max_num_trial:
                 print('early stop!', file=sys.stderr)
-                exit(0)
+                return
 
             # decay lr, and restore from previously best checkpoint
             lr = optimizer.param_groups[0]['lr'] * args.lr_decay
