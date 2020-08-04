@@ -21,7 +21,7 @@ from model import utils
 from components.dataset import Example
 
 if six.PY3:
-    from asdl import Python3TransitionSystem
+    from asdl.lang.py3.py3_transition_system import Python3TransitionSystem
 else:
     from asdl import PythonTransitionSystem
 
